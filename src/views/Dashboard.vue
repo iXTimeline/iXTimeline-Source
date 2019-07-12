@@ -62,7 +62,7 @@
                 </v-flex>
                 <v-layout row pl-3 style="position: absolute; bottom:20px">
                     <v-flex xs4 offset-xs2 mr-5>
-                        <v-btn color="success">Apply</v-btn>
+                        <v-btn color="success" @click="applyFilters()">Apply</v-btn>
                     </v-flex>
                     <v-flex xs4 ml-5>
                         <v-btn color="error" @click="resetFilters()">Clear All</v-btn>
@@ -70,9 +70,6 @@
                     <v-spacer/>
                 </v-layout>
             </v-list>
-            {{ activeItemTypeFilters }}
-            {{ activeDatabaseFilters }}
-            {{ activeServerFilters }}
         </v-navigation-drawer>
         <v-layout wrap>
             <v-flex xs11 offset-xs1 class="display-2">
@@ -173,79 +170,79 @@ export default {
                 'Write Off'
             ],
             databases: [
-                'ixAdmin_Audit',
-                'ixAdmin_Main',
-                'ixAdmin_Port',
-                'ixAdmin_Report',
-                'ixAlert_Audit',
-                'ixAlert_Main',
-                'ixAlert_Mart',
-                'ixAudit_Audit',
-                'ixAudit_Main',
-                'ixAudit_Port',
-                'ixControl_Audit',
-                'ixControl_Client',
-                'ixControl_Main',
-                'ixControl_Port',
-                'ixControl_Report',
-                'ixControl_Utilities',
-                'ixCore_Audit',
-                'ixCore_Main',
-                'ixCore_Port',
-                'ixMart',
-                'ixReport_Audit',
-                'ixReport_Main',
-                'ixReport_Port',
-                'ixRoute_Audit',
-                'ixRoute_Main',
-                'ixRoute_Port',
-                'ixRoute_Report',
-                'ixSubscription_Main',
-                'ixSum',
-                'ixTrade_Main',
-                'ixTrade_Port',
-                'ixTrade_Audit',
-                'ixAEP',
-                'ixTranslate_Main',
-                'ixTranslate_Port',
-                'ixBill_Audit',
-                'ixBill_Main',
-                'ixBill_Port',
-                'ixAudit_Report',
-                'ixCDR_01',
-                'ixCDR_02',
-                'ixCDR_03',
-                'ixCDR_04',
-                'ixCDR_05',
-                'ixCDR_06',
-                'ixCDR_07',
-                'ixCDR_08',
-                'ixCDR_nnn',
-                'ixTemp',
-                'ixTranslate_Audit',
-                'ixUpload_Main',
-                'ixFinance_Main',
-                'ixFinance_Port_FT',
-                'ixQOS',
-                'ixInsight_Main',
-                'ixInsight_Mart',
-                'ixFinance_Audit',
-                'ixFinance_Port_ATT',
-                'ixFinance_Port',
-                'ixArchive',
-                'ixMart_CDR',
-                'ixDataLoader_INCR',
-                'ixDataLoader_INIT',
-                'ixDataLoader_Main',
-                'ixSubscriber_Main',
-                'ixSubscriber_Audit'
+              'iXAdmin_Audit',
+              'iXAdmin_Main',
+              'iXAdmin_Port',
+              'iXAdmin_Report',
+              'iXAlert_Audit',
+              'iXAlert_Main',
+              'iXAlert_Mart',
+              'iXAudit_Audit',
+              'iXAudit_Main',
+              'iXAudit_Port',
+              'iXControl_Audit',
+              'iXControl_Client',
+              'iXControl_Main',
+              'iXControl_Port',
+              'iXControl_Report',
+              'iXControl_Utilities',
+              'iXCore_Audit',
+              'iXCore_Main',
+              'iXCore_Port',
+              'iXMart',
+              'iXReport_Audit',
+              'iXReport_Main',
+              'iXReport_Port',
+              'iXRoute_Audit',
+              'iXRoute_Main',
+              'iXRoute_Port',
+              'iXRoute_Report',
+              'iXSubscription_Main',
+              'iXSum',
+              'iXTrade_Main',
+              'iXTrade_Port',
+              'iXTrade_Audit',
+              'iXAEP',
+              'iXTranslate_Main',
+              'iXTranslate_Port',
+              'iXBill_Audit',
+              'iXBill_Main',
+              'iXBill_Port',
+              'iXAudit_Report',
+              'iXCDR_01',
+              'iXCDR_02',
+              'iXCDR_03',
+              'iXCDR_04',
+              'iXCDR_05',
+              'iXCDR_06',
+              'iXCDR_07',
+              'iXCDR_08',
+              'iXCDR_nnn',
+              'iXTemp',
+              'iXTranslate_Audit',
+              'iXUpload_Main',
+              'iXFinance_Main',
+              'iXFinance_Port_FT',
+              'iXQOS',
+              'iXInsight_Main',
+              'iXInsight_Mart',
+              'iXFinance_Audit',
+              'iXFinance_Port_ATT',
+              'iXFinance_Port',
+              'iXArchive',
+              'iXMart_CDR',
+              'iXDataLoader_INCR',
+              'iXDataLoader_INIT',
+              'iXDataLoader_Main',
+              'iXSubscriber_Main',
+              'iXSubscriber_Audit'
             ],
             servers: [
-                'Coreserver',
-                'Reportserver',
-                'Batchserver',
-                'CDRServer01',
-                'CDRServer02'
+              'CoreServer',
+              'ReportServer',
+              'BatchServer1',
+              'CDRServer01',
+              'CDRServer02'
             ],
             drawTimeline: true,
             selectedDate: '2019-06-01',
@@ -386,7 +383,6 @@ export default {
                     }
                 }
 
-                tempJson["TaskLogIDs"] = [];
                 tempJson["ChildProcessLogIDs"] = [];
                 parentProcessJson[processLogID] = tempJson;
                 parentRegistryJson[registryID].ProcessLogIDs.push(processLogID);
@@ -404,7 +400,6 @@ export default {
                     }
                 }
 
-                tempJson["TaskLogIDs"] = [];
                 childProcessJson[processLogID] = tempJson;
                 parentProcessJson[parentProcessLogID].ChildProcessLogIDs.push(processLogID);
                 childRegistryJson[registryID].ProcessLogIDs.push(processLogID);
@@ -421,14 +416,12 @@ export default {
                     }
                 }
 
-                taskLogJson[taskLogID] = tempJson;
-
-                if (parentProcessJson.hasOwnProperty(processLogID)) {
-                    parentProcessJson[processLogID].TaskLogIDs.push(taskLogID);
+                if (taskLogJson.hasOwnProperty(processLogID)) {
+                    taskLogJson[processLogID].push(tempJson);
                 }
-
-                if (childProcessJson.hasOwnProperty(processLogID)) {
-                    childProcessJson[processLogID].TaskLogIDs.push(taskLogID);
+                else {
+                    taskLogJson[processLogID]= [];
+                    taskLogJson[processLogID].push(tempJson);
                 }
             }
 
@@ -537,73 +530,148 @@ export default {
               }
             }
 
-            this.childRegistryData = tempRegistry
-            this.isLoading = false
-        },
-        // calcRegistryBeginEndTime() {
-        //     var registryID = ''
-        //     var minProcessBeginArray = []
-        //     var maxProcessEndArray = []
-        //
-        //     for (var i in this.registryData) {
-        //         registryID = i
-        //         for (var j = 0; j < this.processData[registryID].length; j++) {
-        //             minProcessBeginArray.push(Date.parse(this.processData[registryID][j].ProcessBeginTime))
-        //             maxProcessEndArray.push(Date.parse(this.processData[registryID][j].ProcessEndTime))
-        //         }
-        //         if (minProcessBeginArray.length > 0) {
-        //             this.registryData[registryID].BeginTime = Math.min(...minProcessBeginArray)
-        //         }
-        //         if (maxProcessEndArray.length > 0) {
-        //             this.registryData[registryID].EndTime = Math.max(...maxProcessEndArray)
-        //         }
-        //
-        //         maxProcessEndArray = []
-        //         minProcessBeginArray = []
-        //     }
-        // },
-        // calcChartRange() {
-        //     var chartMin = []
-        //     var chartMax = []
-        //
-        //     for (var i in this.parentProcessData) {
-        //         for (var j in this.parentProcessData[i]){
-        //             chartMin.push(this.parentProcessData[i][j].ProcessBeginTime)
-        //             chartMax.push(this.parentProcessData[i][j].ProcessEndTime)
-        //         }
-        //     }
-        //
-        //     this.chartOptions.hAxis.minValue = new Date(Math.min(...chartMin))
-        //     this.chartOptions.hAxis.maxValue = new Date(Math.max(...chartMax))
-        // },
-        resetFilters() {
-            this.activeServerFilters = []
-            this.activeItemTypeFilters = []
-            this.activeDatabaseFilters = []
-        },
-        drawTasks(processLogID) {
-            var container = document.getElementById('task-modal-dashboard');
-            var chart = new google.visualization.Timeline(container);
-            var dataTable = new google.visualization.arrayToDataTable(this.taskChartData);
-            var options = {
-                height: 100,
-                timeline: {
-                    showRowLabels: true
-                },
-                width: this.chartWidth
-            };
+              maxProcessEndArray = []
+              minProcessBeginArray = []
+          }
+      },
+      calcChartRange() {
+          var chartMin = []
+          var chartMax = []
 
-            this.processText = "";
+          for (var i in this.parentProcessData) {
+              for (var j in this.parentProcessData[i]){
+                  chartMin.push(this.parentProcessData[i][j].ProcessBeginTime)
+                  chartMax.push(this.parentProcessData[i][j].ProcessEndTime)
+              }
+          }
 
-            for (var key in this.data[processLogID]) {
-                if (key !== "Tasks") {
-                    this.processText +=
+          this.chartOptions.hAxis.minValue = new Date(Math.min(...chartMin))
+          this.chartOptions.hAxis.maxValue = new Date(Math.max(...chartMax))
+      },
+      resetFilters() {
+        this.activeServerFilters = []
+        this.activeItemTypeFilters = []
+        this.activeDatabaseFilters = []
+      },
+
+      intersection() {
+        var result = [];
+        var lists;
+
+        if(arguments.length === 1) {
+          lists = arguments[0];
+        } else {
+          lists = arguments;
+        }
+
+        for(var i = 0; i < lists.length; i++) {
+          var currentList = lists[i];
+          for(var y = 0; y < currentList.length; y++) {
+              var currentValue = currentList[y];
+            if(result.indexOf(currentValue) === -1) {
+              var existsInAll = true;
+              for(var x = 0; x < lists.length; x++) {
+                if(lists[x].indexOf(currentValue) === -1) {
+                  existsInAll = false;
+                  break;
+                }
+              }
+              if(existsInAll) {
+                result.push(currentValue);
+              }
+            }
+          }
+        }
+        return result;
+      },
+      applyFilters() {
+        this.chartData = []
+        var registryList = []
+        var itemTypeList = []
+        var serverList = []
+        var databaseList = []
+        var allRegistryIDs = []
+
+        for (var i in this.parentRegistryData) {
+          allRegistryIDs.push(this.parentRegistryData[i].RegistryID)
+        }
+
+        for (var i in this.parentRegistryData) {
+          for (var j in this.activeItemTypeFilters) {
+            if (this.parentRegistryData[i].ObjectType == this.activeItemTypeFilters[j]) {
+              itemTypeList.push(this.parentRegistryData[i].RegistryID)
+            }
+          }
+        }
+        for (var i in this.parentProcessData) {
+          for (var j in this.activeServerFilters) {
+            for (var k in this.parentProcessData[i]) {
+              if (this.parentProcessData[i][k].ServerName == this.activeServerFilters[j]) {
+                serverList.push(this.parentProcessData[i][k].RegistryID)
+              }
+            }
+          }
+        }
+        for (var i in this.parentProcessData) {
+          for (var j in this.activeDatabaseFilters) {
+            for (var k in this.parentProcessData[i]) {
+              if (this.parentProcessData[i][k].DatabaseName == this.activeDatabaseFilters[j]) {
+                databaseList.push(this.parentProcessData[i][k].RegistryID)
+              }
+            }
+          }
+        }
+
+        if (this.activeDatabaseFilters.length == 0) {
+          databaseList = allRegistryIDs
+        }
+        if (this.activeServerFilters.length == 0) {
+          serverList = allRegistryIDs
+        }
+        if (this.activeItemTypeFilters.length == 0) {
+          itemTypeList = allRegistryIDs
+        }
+        console.log(databaseList)
+        console.log(serverList)
+        console.log(itemTypeList)
+        registryList = this.intersection(databaseList, serverList, itemTypeList)
+
+        console.log(registryList)
+        for (var i in this.parentProcessData) {
+          for (var j in this.parentProcessData[i]) {
+            if (registryList.includes(this.parentProcessData[i][j].RegistryID)) {
+              this.chartData.push([ this.parentProcessData[i][j].Process, String(this.parentProcessData[i][j].ProcessID), new Date(this.parentProcessData[i][j].ProcessBeginTime), new Date(this.parentProcessData[i][j].ProcessEndTime), String(this.parentProcessData[i][j].ProcessID) ])
+            }
+         }
+        }
+
+        console.log('chartdata')
+        console.log(this.chartData)
+        if (this.chartData.length > 0) {
+          this.drawTimeline = true
+        }
+        setTimeout(this.drawDashboard(), 3000)
+      },
+      drawTasks(processLogID) {
+          var container = document.getElementById('task-modal-dashboard');
+          var chart = new google.visualization.Timeline(container);
+          var dataTable = new google.visualization.arrayToDataTable(this.taskChartData);
+          var options = {
+              height: 100,
+              timeline: {
+                  showRowLabels: true
+              },
+              width: this.chartWidth
+          };
+          this.processText = "";
+          for (var key in this.data[processLogID]) {
+              if (key !== "Tasks") {
+                  this.processText +=
                         (key === "ParentProcessLogID" ? "" : "<br>") +
                         "<span class=\"body-1 font-weight-bold\">" + key + ":</span> " +
                         "<span class=\"body-1\">" + (!this.data[processLogID][key] ? "" : this.data[processLogID][key]) + "</span>";
                 }
             }
-
             chart.draw(dataTable, options);
         },
         getWindowHeight(event) {
@@ -612,7 +680,6 @@ export default {
         getWindowWidth(event) {
             this.windowWidth = document.documentElement.clientWidth;
             this.setChartWidth();
-
             if (this.modalVisible) {
                 this.drawTasks();
             }
@@ -622,7 +689,6 @@ export default {
         },
         showModal(processLogID) {
             this.modalVisible = true;
-
             setTimeout(() => (this.drawTasks(processLogID)), 100);
         }
     },
