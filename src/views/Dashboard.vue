@@ -4,10 +4,113 @@
     fluid
     grid-list-xl
   >
+  <v-toolbar
+      color="purple darken-1"
+      dark
+      fixed
+      app
+      clipped-right
+    >
+      <v-toolbar-title
+        class="font-italic display-2"
+      >iXTimeline</v-toolbar-title>
+      <v-spacer></v-spacer>
+</v-toolbar>
+  <v-navigation-drawer
+      fixed
+      right
+      clipped
+      app
+      width="460"
+    >
+    <v-list>
+      <v-list-tile class='headertile'>
+        <v-list-tile-content>
+            <v-list-tile-title>FILTERS</v-list-tile-title>
+          </v-list-tile-content>
+      </v-list-tile>
+      <v-flex xs12 px-3>
+        <v-list-tile-content style="min-width: 500px;">
+        <v-select
+          :items="itemTypes"
+          label="Item Type"
+          chips
+          deletable-chips
+          multiple
+          clearable
+          v-model="activeItemTypeFilters"
+          style="min-width: 425px; max-width: 425px"
+        ></v-select>
+        </v-list-tile-content>
+      </v-flex>
+      <v-flex xs12 px-3>
+        <v-list-tile-content style="min-width: 500px;">
+        <v-select
+          :items="databases"
+          label="Database"
+          chips
+          deletable-chips
+          multiple
+          clearable
+          v-model="activeDatabaseFilters"
+          style="min-width: 425px; max-width: 425px"
+        ></v-select>
+        </v-list-tile-content>
+      </v-flex>
+      <v-flex xs12 px-3>
+        <v-list-tile-content style="min-width: 500px;">
+        <v-select
+          :items="servers"
+          label="Server"
+          chips
+          deletable-chips
+          multiple
+          clearable
+          v-model="activeServerFilters"
+          style="min-width: 425px; max-width: 425px"
+        ></v-select>
+        </v-list-tile-content>
+      </v-flex>
+      <v-layout row pl-3 style="position: absolute; bottom:20px">
+        <v-flex xs4 offset-xs2 mr-5>
+          <v-btn color="success">Apply</v-btn>
+        </v-flex>
+        <v-flex xs4 ml-5>
+          <v-btn color="error" @click="resetFilters()">Clear All</v-btn>
+        </v-flex>
+        <v-spacer/>
+    </v-layout>
+    </v-list>
+
+
+
+
+        {{ activeItemTypeFilters }}
+          {{ activeDatabaseFilters }}
+            {{ activeServerFilters }}
+</v-navigation-drawer>
+
     <v-layout wrap>
+    <v-flex xs11 offset-xs1 class="display-2">
+          <span pr-0>{{selectedDate}}</span>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <v-btn
+                color="primary"
+                dark
+                flat
+                icon
+                v-on="on"
+              ><v-icon>calendar_today</v-icon>
+              </v-btn>
+            </template>
+                  <v-date-picker v-model="selectedDate" landscape reactive></v-date-picker>
+          </v-menu>
+    </v-flex>
       <v-flex
         xs10
         offset-xs1
+        v-if="drawTimeline"
       >
       <div id="dashboard" style="width:1200px;">
           <div id="chart" style="position: relative; width: 1200px; height: 600px; backgroundColor: #ffffff;"></div>
@@ -15,54 +118,19 @@
       </div>
       <div id="junk_div" style="display: none;"></div>
     </v-flex>
-      <v-flex
-        sm6
-        xs12
-        md6
-        lg2
-        offset-lg3
-      >
-        <material-stats-card
-          color="green"
-          icon="mdi-check"
-          title="Successful jobs"
-          value="34,245"
-          sub-icon="mdi-calendar"
-          sub-text="Last 24 Hours"
-        />
-      </v-flex>
-      <v-flex
-        sm6
-        xs12
-        md6
-        lg2
-      >
-        <material-stats-card
-          color="orange"
-          icon="mdi-content-copy"
-          title="Storage"
-          value="49/50"
-          small-value="GB"
-          sub-icon="mdi-information"
-          sub-text="Storage nearing capacity."
-        />
-      </v-flex>
-      <v-flex
-        sm6
-        xs12
-        md6
-        lg2
-      >
-        <material-stats-card
-          color="red"
-          icon="mdi-information-outline"
-          title="Failed jobs"
-          value="75"
-          sub-icon="mdi-alert"
-          sub-icon-color="error"
-          sub-text="Issues needing attention."
-        />
-      </v-flex>
+    <v-spacer/>
+    <v-flex
+      xs10
+      offset-xs1
+      v-if="!drawTimeline"
+    >
+      <v-card color="red lighten-1">
+        <v-card-text>
+          <v-icon dark>report_problem</v-icon> <span class="white--text pl-3" >No results found.</span>
+        </v-card-text>
+      </v-card>
+    </v-flex>
+    <v-spacer/>
     </v-layout>
   </v-container>
 </template>
@@ -70,15 +138,158 @@
 <script>
 import processData from '../assets/PROCESS.json'
 import registryData from '../assets/REGISTRY.json'
+import parentRegistryData from '../assets/ParentRegistries.json'
+import childRegistryData from '../assets/ChildRegistries.json'
+import parentProcessData from '../assets/PROCESS.json'
+import childProcessData from '../assets/ChildProcess.json'
 
 export default {
   data () {
     return {
+      filters: {
+        itemtype: {
+          account: false,
+          audit: false,
+          bill: false,
+          business_alert: false,
+          CDR_file: false,
+          connect: false,
+          cycle: false,
+          data_file: false,
+          database: false,
+          external_data_warehouse: false,
+          extract: false,
+          finance: false,
+          import_export: false,
+          infrastructure_test: false,
+          ixinsight: false,
+          notification: false,
+          performance_metric: false,
+          route_guide: false,
+          standardized_CDR: false,
+          switch_upload: false,
+          system_audit: false,
+          trade: false,
+          write_off: false
+        }
+      },
+      itemTypes: [
+        'All',
+        'Account',
+        'Audit',
+        'Bill',
+        'Business Alert',
+        'CDR File',
+        'Connect',
+        'Cycle',
+        'Data File',
+        'Database',
+        'External Data Warehouse',
+        'Extract',
+        'Finance',
+        'Import/Export',
+        'Infrastructure Test',
+        'iXInsight',
+        'Notification',
+        'Performance Metric',
+        'Route Guide',
+        'Standardized CDR',
+        'Switch Upload',
+        'System Audit',
+        'Trade',
+        'Write Off'
+      ],
+      databases: [
+        'ixAdmin_Audit',
+        'ixAdmin_Main',
+        'ixAdmin_Port',
+        'ixAdmin_Report',
+        'ixAlert_Audit',
+        'ixAlert_Main',
+        'ixAlert_Mart',
+        'ixAudit_Audit',
+        'ixAudit_Main',
+        'ixAudit_Port',
+        'ixControl_Audit',
+        'ixControl_Client',
+        'ixControl_Main',
+        'ixControl_Port',
+        'ixControl_Report',
+        'ixControl_Utilities',
+        'ixCore_Audit',
+        'ixCore_Main',
+        'ixCore_Port',
+        'ixMart',
+        'ixReport_Audit',
+        'ixReport_Main',
+        'ixReport_Port',
+        'ixRoute_Audit',
+        'ixRoute_Main',
+        'ixRoute_Port',
+        'ixRoute_Report',
+        'ixSubscription_Main',
+        'ixSum',
+        'ixTrade_Main',
+        'ixTrade_Port',
+        'ixTrade_Audit',
+        'ixAEP',
+        'ixTranslate_Main',
+        'ixTranslate_Port',
+        'ixBill_Audit',
+        'ixBill_Main',
+        'ixBill_Port',
+        'ixAudit_Report',
+        'ixCDR_01',
+        'ixCDR_02',
+        'ixCDR_03',
+        'ixCDR_04',
+        'ixCDR_05',
+        'ixCDR_06',
+        'ixCDR_07',
+        'ixCDR_08',
+        'ixCDR_nnn',
+        'ixTemp',
+        'ixTranslate_Audit',
+        'ixUpload_Main',
+        'ixFinance_Main',
+        'ixFinance_Port_FT',
+        'ixQOS',
+        'ixInsight_Main',
+        'ixInsight_Mart',
+        'ixFinance_Audit',
+        'ixFinance_Port_ATT',
+        'ixFinance_Port',
+        'ixArchive',
+        'ixMart_CDR',
+        'ixDataLoader_INCR',
+        'ixDataLoader_INIT',
+        'ixDataLoader_Main',
+        'ixSubscriber_Main',
+        'ixSubscriber_Audit'
+      ],
+      servers: [
+        'Coreserver',
+        'Reportserver',
+        'Batchserver',
+        'CDRServer01',
+        'CDRServer02'
+      ],
+      drawTimeline: true,
+      selectedDate: '2019-06-01',
+      displayCalendar: false,
+      isLoading: true,
+      activeItemTypeFilters: [],
+      activeDatabaseFilters: [],
+      activeServerFilters: [],
       chartData: [],
+      parentRegistryData: parentRegistryData,
+      childRegistryData: childRegistryData,
+      parentProcessData: parentProcessData,
+      childProcessData: childProcessData,
       chartOptions: {
         hAxis: {
-          minValue: '',
-          maxValue: ''
+          minValue: new Date('2019-06-01'),
+          maxValue: new Date('2019-06-02')
         }
       },
       processData: processData,
@@ -93,113 +304,145 @@ export default {
     }
   },
   mounted: function() {
-    console.log("hello");
     document.onreadystatechange = () => {
   if (document.readyState == "complete") {
       // run code here
-      this.drawDashboard();
+      //this.drawDashboard();
   }
 }
   },
+  watch: {
+    isLoading: function() {
+      this.drawDashboard();
+    }
+  },
   methods: {
     drawDashboard() {
+      var chart1 = new google.visualization.Timeline(document.getElementById('chart'));
+      //var data = new google.visualization.arrayToDataTable(this.chartData);
 
-                var control = new google.visualization.ControlWrapper({
-    controlType: 'ChartRangeFilter',
-    containerId: 'control',
-    options: {
-        // Filter by the date axis.
-        filterColumnIndex: 1,
-        ui: {
-            chartType: 'LineChart',
-            minRangeSize: 600000,
-            chartOptions: {
-                width: 1200,
-                height: 70,
-                hAxis: {
-                    format: 'hh:mm:ss',
-                    ticks: [
-                        this.chartOptions.hAxis.minValue,
+      var data1 = new google.visualization.DataTable();
 
-                        this.chartOptions.hAxis.maxValue
-                    ]
-                },
-                chartArea: {
-                  width: '90%', // make sure this is the same for the chart and control so the axes align right
-                  height: '90%'
-                }
+     data1.addColumn({ type: 'string', id: 'Process' });
+     data1.addColumn({ type: 'string', id: 'Runtime' });
+     data1.addColumn({ type: 'date', id: 'Start' });
+     data1.addColumn({ type: 'date', id: 'End' });
+     data1.addColumn({ type: 'string', role: 'tooltip'});
+     data1.addRows(this.chartData);
+
+     var options1 = {
+       chartArea: {
+         left: 40,
+         width: '100%',
+       },
+       timeline: {
+         showBarLabels: false,
+       },
+       width: '100%',
+       height: 600,
+     };
+
+     google.visualization.events.addListener(chart1, 'select', function () {
+       var selection = chart1.getSelection();
+       if (selection.length > 0) {
+         console.log(data1.getValue(selection[0].row, 4));
+       }
+     });
+
+      //dashboard.bind(control, chart);
+      chart1.draw(data1,options1);
+
             },
-            chartView: {
-                columns: [1, {
-                    type: 'number',
-                    calc: function () {return 0;}
-                }]
-            }
-        }
-    }
-});
-
-var dashboard = new google.visualization.Dashboard(
-    document.getElementById('dashboard'));
-
-                var chart = new google.visualization.ChartWrapper({
-                    'chartType': 'Timeline',
-                        'containerId': 'chart',
-                        'options': {
-                        'width': 1200,
-                            'height': 600,
-                            'chartArea': {
-                            width: '100%', // make sure this is the same for the chart and control so the axes align right
-                            height: '100%'
-                        },
-                            'backgroundColor': '#ffd'
-                    },
-                        'view': {
-                        'columns': [0, 1, 2]
-                    }
-
-                });
-
-                var data = new google.visualization.arrayToDataTable(this.chartData);
-
-                dashboard.bind(control, chart);
-                dashboard.draw(data);
-            },
-    refactorProcess() {
-      console.log('in refactor')
+    refactorParentProcess() {
+      console.log('in refactor parent process')
+      this.isLoading = true
       var tempProcess = {}
-      for (var i in this.processData) {
-        var properties = {}
-        var registryID = ''
-        var tempArray = []
-        for (var j in this.processData[i]) {
-            registryID = this.processData[i][j].RegistryID
-            if (tempProcess.hasOwnProperty(registryID)) {
-              properties[j] = this.processData[i][j]
-              tempProcess[registryID].push(properties[j])
-            } else {
-              properties[j] = this.processData[i][j]
-              tempArray.push(properties[j])
-              tempProcess[registryID] = tempArray
-            }
-            tempArray = []
+      var properties = {}
+      var tempObj = {}
+      var registryID = ''
+      var tempArray = []
+      for (var i in this.parentProcessData) {
+        properties = {}
+        tempObj = {}
+        registryID = this.parentProcessData[i].RegistryID
+        tempProcess[registryID] = []
+        for (var j in this.parentProcessData[i]) {
+          if (tempProcess.hasOwnProperty(registryID)) {
+            properties[j] = this.parentProcessData[i][j]
+            tempObj[j] = properties[j]
+          } else {
+            properties[j] = this.parentProcessData[i][j]
+            tempArray.push(properties[j])
+            tempProcess[registryID] = tempArray
+          }
         }
+        tempProcess[registryID].push(tempObj)
       }
-      this.processData = tempProcess
+      this.parentProcessData = tempProcess
+      this.isLoading = false
+      console.log('out refactor parent process')
     },
-    refactorRegistry() {
-      console.log('in refactor registry')
+    refactorChildProcess() {
+      console.log('in refactor child process')
+      this.isLoading = true
+      var tempProcess = {}
+      var properties = {}
+      var tempObj = {}
+      var registryID = ''
+      var tempArray = []
+      for (var i in this.childProcessData) {
+        properties = {}
+        registryID = this.childProcessData[i].RegistryID
+        tempProcess[registryID] = []
+        for (var j in this.childProcessData[i]) {
+          if (tempProcess.hasOwnProperty(registryID)) {
+            properties[j] = this.childProcessData[i][j]
+            tempObj[j] = properties[j]
+          } else {
+            properties[j] = this.childProcessData[i][j]
+            tempArray.push(properties[j])
+            tempProcess[registryID] = tempArray
+          }
+        }
+        tempProcess[registryID].push(tempObj)
+      }
+      this.childProcessData = tempProcess
+      this.isLoading = false
+      console.log('out refactor child process')
+    },
+    refactorParentRegistry() {
+      this.isLoading = true
       var tempRegistry = {}
-      for (var i in this.registryData) {
-        var properties = {}
-        var registryID = ''
-        for (var j in this.registryData[i]) {
-            registryID = this.registryData[i][j].RegistryID
-            properties[j] = this.registryData[i][j]
-            tempRegistry[registryID] = properties[j]
+      var properties = {}
+      var registryID = ''
+      for (var i in this.parentRegistryData) {
+        properties = {}
+        registryID = this.parentRegistryData[i].RegistryID
+        tempRegistry[registryID] = {}
+        for (var j in this.parentRegistryData[i]) {
+            properties[j] = this.parentRegistryData[i][j]
+            tempRegistry[registryID][j] = properties[j]
         }
       }
-      this.registryData = tempRegistry
+      this.parentRegistryData = tempRegistry
+      this.isLoading = false
+    },
+    refactorChildRegistry() {
+      this.isLoading = true
+      var tempRegistry = {}
+      var properties = {}
+      var registryID = ''
+      for (var i in this.childRegistryData) {
+        properties = {}
+        registryID = this.childRegistryData[i].RegistryID
+        tempRegistry[registryID] = {}
+        for (var j in this.childRegistryData[i]) {
+            properties[j] = this.childRegistryData[i][j]
+            tempRegistry[registryID][j] = properties[j]
+        }
+      }
+      this.childRegistryData = tempRegistry
+      this.isLoading = false
     },
     calcRegistryBeginEndTime() {
       var registryID = ''
@@ -229,31 +472,54 @@ var dashboard = new google.visualization.Dashboard(
       var chartMin = []
       var chartMax = []
 
-      for (var i in this.registryData) {
-        console.log(this.registryData[i].BeginTime)
-        chartMin.push(this.registryData[i].BeginTime)
-        chartMax.push(this.registryData[i].EndTime)
+      for (var i in this.parentProcessData) {
+        for (var j in this.parentProcessData[i]){
+          chartMin.push(this.parentProcessData[i][j].ProcessBeginTime)
+          chartMax.push(this.parentProcessData[i][j].ProcessEndTime)
+        }
       }
 
       this.chartOptions.hAxis.minValue = new Date(Math.min(...chartMin))
       this.chartOptions.hAxis.maxValue = new Date(Math.max(...chartMax))
 
+    },
+    resetFilters() {
+      this.activeServerFilters = []
+      this.activeItemTypeFilters = []
+      this.activeDatabaseFilters = []
     }
   },
   created: function() {
-    this.refactorProcess()
-    this.refactorRegistry()
-    this.calcRegistryBeginEndTime()
-    this.calcChartRange()
+    this.isLoading = true
+    //this.refactorParentRegistry()
+    //this.refactorChildRegistry()
+    this.refactorParentProcess()
+    this.refactorChildProcess()
+    //this.calcChartRange()
 
-    for (var i in this.registryData) {
-      this.chartData.push([ this.registryData[i].RegistryName, new Date(this.registryData[i].BeginTime), new Date(this.registryData[i].EndTime) ])
+    //console.log(this.parentProcessData[6405640])
+
+    console.log(this.parentProcessData)
+
+    for (var i in this.parentProcessData) {
+
+      for (var j in this.parentProcessData[i]) {
+        //console.log(this.parentProcessData[i][j].Process)
+        this.chartData.push([ this.parentProcessData[i][j].Process, String(this.parentProcessData[i][j].ProcessID), new Date(this.parentProcessData[i][j].ProcessBeginTime), new Date(this.parentProcessData[i][j].ProcessEndTime), String(this.parentProcessData[i][j].ProcessID) ])
+     }
     }
-
+    //console.log(this.chartData)
+    this.isLoading = false
     console.log(this.chartData)
-    console.log(this.chartOptions.hAxis.minValue.getHours())
   }
 }
 </script>
 <style>
+.headertile {
+  background: #EEEEEE;
+}
+
+text {
+ pointer-events: none;
+}
 </style>

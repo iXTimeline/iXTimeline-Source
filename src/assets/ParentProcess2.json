@@ -1,0 +1,40 @@
+[
+ {
+   "ProcessLogID": 8676099,
+   "ParentProcessLogID": null,
+   "RegistryID": 6405640,
+   "ProcessID": 108945,
+   "Process": "Prepare to Translate Routing",
+   "StatusID": "101013",
+   "Status": "Completed",
+   "PriorityID": 3,
+   "PriorityName": "Medium",
+   "SQLCommand": "Exec bspRGPrepareToTranslate 8676099",
+   "ProcessBeginTime": "2019-07-09 21:41:04.820",
+   "ProcessEndTime": "2019-07-09 21:41:04.880",
+   "JobMessage": "Executed as user: ETG\\dt80srv. The step succeeded. Status changed From Running to Completed",
+   "ServerID": 1,
+   "ServerName": "CoreServer",
+   "DatabaseID": 28,
+   "DatabaseName": "iXRoute_Main"
+ },
+ {
+   "ProcessLogID": 8676508,
+   "ParentProcessLogID": null,
+   "RegistryID": 6405999,
+   "ProcessID": 108920,
+   "Process": "Credit Limit Processing",
+   "StatusID": "101013",
+   "Status": "Completed",
+   "PriorityID": 3,
+   "PriorityName": "Medium",
+   "SQLCommand": "Exec bspCreditLimitTransactionWrapper 8676508",
+   "ProcessBeginTime": "2019-07-10 00:20:01.663",
+   "ProcessEndTime": "2019-07-10 00:20:02.947",
+   "JobMessage": "Executed as user: ETG\\dt80srv. CLM processing has completed successfully. However, the following accounts have a current balance or remaining credit that exceeds the maximum absolute value supported by the system: DoNotTouch_GP_Barbados-PTT,DoNotTouch_GP_Belarus-PTT,UT-Mayotte-PTT,Palau-PTT,Somalia-PTT,Guinea Bissau-LD,Poseidon Telecom,Falls Church Telecommunications,NandTestAccount,jordan_regular3 [SQLSTATE 01000] (Message 0). The step succeeded. Status changed From Running to Completed",
+   "ServerID": 2,
+   "ServerName": "ReportServer",
+   "DatabaseID": 31,
+   "DatabaseName": "iXSubscription_Main"
+ }
+ ]
