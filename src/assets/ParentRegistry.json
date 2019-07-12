@@ -1,0 +1,134 @@
+[
+ {
+   "RegistryID": 6241218,
+   "Registry": "KPI : 2019-05-22",
+   "ParentRegistryID": null,
+   "ObjectID": 196153,
+   "ObjectName": "Daily Data Mart Preparation",
+   "ObjectTypeID": 107,
+   "ObjectType": "Performance Metric",
+   "StatusID": 107143,
+   "Status": "KPI Mart Update Flags Completed"
+ },
+ {
+   "RegistryID": 6260423,
+   "Registry": "ABER_20190528_8514699.txt",
+   "ParentRegistryID": null,
+   "ObjectID": 195805,
+   "ObjectName": "Agg BER",
+   "ObjectTypeID": 102,
+   "ObjectType": "CDR File",
+   "StatusID": 102023,
+   "Status": "Load Completed"
+ },
+ {
+   "RegistryID": 6260757,
+   "Registry": "BatchServer DimensionRefresh 2019-05-28 03",
+   "ParentRegistryID": null,
+   "ObjectID": 195869,
+   "ObjectName": "BatchServer DimensionRefresh",
+   "ObjectTypeID": 107,
+   "ObjectType": "Performance Metric",
+   "StatusID": 107043,
+   "Status": "Dimension Update Completed"
+ },
+ {
+   "RegistryID": 6260905,
+   "Registry": "BatchServer DimensionRefresh 2019-05-28 04",
+   "ParentRegistryID": null,
+   "ObjectID": 195869,
+   "ObjectName": "BatchServer DimensionRefresh",
+   "ObjectTypeID": 107,
+   "ObjectType": "Performance Metric",
+   "StatusID": 107043,
+   "Status": "Dimension Update Completed"
+ },
+ {
+   "RegistryID": 6260907,
+   "Registry": "DimensionRefresh 2019-05-28 04",
+   "ParentRegistryID": null,
+   "ObjectID": 196185,
+   "ObjectName": "DimensionRefresh",
+   "ObjectTypeID": 107,
+   "ObjectType": "Performance Metric",
+   "StatusID": 107043,
+   "Status": "Dimension Update Completed"
+ },
+ {
+   "RegistryID": 6261055,
+   "Registry": "Hourly AKPI 2019-05-28 05",
+   "ParentRegistryID": null,
+   "ObjectID": 105072,
+   "ObjectName": "Hourly Alert Mart",
+   "ObjectTypeID": 107,
+   "ObjectType": "Performance Metric",
+   "StatusID": 105020,
+   "Status": "KPI Analysis Completed"
+ },
+ {
+   "RegistryID": 6261789,
+   "Registry": "iXT_SwitchA_yxtest112.txt",
+   "ParentRegistryID": null,
+   "ObjectID": 105139,
+   "ObjectName": "SW A_CDR01",
+   "ObjectTypeID": 102,
+   "ObjectType": "CDR File",
+   "StatusID": 102024,
+   "Status": "Load Failed"
+ },
+ {
+   "RegistryID": 6262678,
+   "Registry": "2019.04.20-All Switches-Account 1",
+   "ParentRegistryID": null,
+   "ObjectID": 196168,
+   "ObjectName": "Standardized CDR All Switches",
+   "ObjectTypeID": 103,
+   "ObjectType": "Standardized CDR",
+   "StatusID": 107053,
+   "Status": "Dimension Specific Rerate Completed"
+ },
+ {
+   "RegistryID": 6262683,
+   "Registry": "2019.04.20-All Switches-Account 2",
+   "ParentRegistryID": null,
+   "ObjectID": 196168,
+   "ObjectName": "Standardized CDR All Switches",
+   "ObjectTypeID": 103,
+   "ObjectType": "Standardized CDR",
+   "StatusID": 107053,
+   "Status": "Dimension Specific Rerate Completed"
+ },
+ {
+   "RegistryID": 6262734,
+   "Registry": "2019.04.20-All Switches-Account 3",
+   "ParentRegistryID": null,
+   "ObjectID": 196168,
+   "ObjectName": "Standardized CDR All Switches",
+   "ObjectTypeID": 103,
+   "ObjectType": "Standardized CDR",
+   "StatusID": 107053,
+   "Status": "Dimension Specific Rerate Completed"
+ },
+ {
+   "RegistryID": 6262800,
+   "Registry": "2019.04.20-All Switches-Account 4",
+   "ParentRegistryID": null,
+   "ObjectID": 196168,
+   "ObjectName": "Standardized CDR All Switches",
+   "ObjectTypeID": 103,
+   "ObjectType": "Standardized CDR",
+   "StatusID": 107053,
+   "Status": "Dimension Specific Rerate Completed"
+ },
+ {
+   "RegistryID": 6263688,
+   "Registry": "Enrich Agg Info: 180705-190528",
+   "ParentRegistryID": null,
+   "ObjectID": 195817,
+   "ObjectName": "Rerate Aggregate Info",
+   "ObjectTypeID": 103,
+   "ObjectType": "Standardized CDR",
+   "StatusID": 103023,
+   "Status": "Rerate Completed"
+ }
+]

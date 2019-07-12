@@ -1,0 +1,21 @@
+[
+ {
+   "ProcessLogID": 8662260,
+   "ParentProcessLogID": null,
+   "RegistryID": 6393078,
+   "ProcessID": 109364,
+   "Process": "CDR File Statitistics",
+   "StatusID": "101013",
+   "Status": "Completed",
+   "PriorityID": 3,
+   "PriorityName": "Medium",
+   "SQLCommand": "Exec bspParentCDRFileStatistics 8662260",
+   "ProcessBeginTime": "2019-07-06 05:01:01.793",
+   "ProcessEndTime": "2019-07-06 05:01:03.923",
+   "JobMessage": "  Status changed From Waiting to Running Status changed From Running to Completed",
+   "ServerID": 1,
+   "ServerName": "CoreServer",
+   "DatabaseID": 12,
+   "DatabaseName": "iXControl_Client"
+ }
+]
