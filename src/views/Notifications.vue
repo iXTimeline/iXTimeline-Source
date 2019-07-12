@@ -113,7 +113,7 @@ export default {
             }
 
             google.visualization.events.addListener(chart, 'select', function() {
-                console.log(chart.getSelection());
+                console.log(dataTablechart.getSelection());
             });
 
             chart.draw(dataTable, options);
