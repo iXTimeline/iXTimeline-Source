@@ -1,263 +1,142 @@
 <template>
-  <v-container
-    fluid
-    grid-list-xl
-    fill-height>
-    <v-layout
-      justify-center
-      align-center
-    >
-      <v-flex xs12>
-        <material-card
-          color="green">
-          <div
-            slot="header"
-          >
-            <div class="title font-weight-light mb-2">Notifications</div>
-            <div class="category">
-            </div>
-          </div>
-
-          <v-card-text>
-            <v-layout
-              row
-              wrap>
-              <v-flex
-                md6
-                sm12>
-                <h2 class="title font-weight-light mb-3">Notifications Style</h2>
-
-                <material-notification
-                  class="mb-3"
-                  color="info"
-                >
-                  This is a plain notification
-                </material-notification>
-                <material-notification
-                  class="mb-3"
-                  color="info"
-                  dismissible
-                >
-                  This is a notification with close button.
-                </material-notification>
-                <material-notification
-                  class="mb-3"
-                  color="info"
-                  dismissible
-                  icon="mdi-bell-plus"
-                >
-
-                  This is a notification with close button and icon.
-                </material-notification>
-                <material-notification
-                  class="mb-3"
-                  color="info"
-                  dismissible
-                  icon="mdi-bell-plus"
-                >
-
-                  This is a notification with close button and icon and have many lines. You can see that the icon and the close button are always vertically aligned. This is a beautiful notification. So you don't have to worry about the style.
-                </material-notification>
-              </v-flex>
-
-              <v-flex
-                md6
-                sm12>
-                <h2 class="title font-weight-light">Notifcation States</h2>
-
-                <material-notification
-                  class="mb-3"
-                  color="info"
-                  dismissible
-                >
-                  <strong>INFO</strong> - This is a regular notification made with `color="info"`
-                </material-notification>
-
-                <material-notification
-                  class="mb-3"
-                  color="success"
-                  dismissible
-                >
-                  <strong>SUCCESS</strong> - This is a regular notification made with `color="success"`
-                </material-notification>
-
-                <material-notification
-                  class="mb-3"
-                  color="warning"
-                  dismissible
-                >
-                  <strong>WARNING</strong> - This is a regular notification made with `color="warning"`
-                </material-notification>
-
-                <material-notification
-                  class="mb-3"
-                  color="error"
-                  dismissible
-                >
-                  <strong>DANGER</strong> - This is a regular notification made with `color="error"`
-                </material-notification>
-
-                <material-notification
-                  class="mb-3"
-                  color="purple"
-                  dismissible
-                >
-                  <strong>PRIMARY</strong> - This is a regular notification made with `color="purple"`
-                </material-notification>
-              </v-flex>
-            </v-layout>
-            <div class="text-xs-center">
-              <h2 class="title font-weight-light mb-2">Notification Places</h2>
-              <span class=" subheading font-weight-light grey--text">Click to view notifications</span>
-            </div>
-
-            <v-container grid-list-lg>
-              <v-layout
-                justify-center
-                row
-                wrap>
-                <v-flex
-                  xs12
-                  sm4>
-                  <v-btn
-                    block
-                    color="success"
-                    @click="snack('top', 'left')"
-                  >
-                    Top Left
-                  </v-btn>
-                </v-flex>
-                <v-flex
-                  xs12
-                  sm4>
-                  <v-btn
-                    block
-                    color="success"
-                    @click="snack('top')"
-                  >
-                    Top Center
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-              <v-layout
-                justify-center
-                row
-                wrap>
-                <v-flex
-                  xs12
-                  sm4>
-                  <v-btn
-                    block
-                    color="success"
-                    @click="snack('top', 'right')"
-                  >
-                    Top Right
-                  </v-btn>
-                </v-flex>
-                <v-flex
-                  xs12
-                  sm4>
-                  <v-btn
-                    block
-                    color="success"
-                    @click="snack('bottom', 'left')"
-                  >
-                    Bottom Left
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-              <v-layout
-                justify-center
-                row
-                wrap>
-                <v-flex
-                  xs12
-                  sm4>
-                  <v-btn
-                    block
-                    color="success"
-                    @click="snack('bottom')"
-                  >
-                    Bottom Center
-                  </v-btn>
-                </v-flex>
-                <v-flex
-                  xs12
-                  sm4>
-                  <v-btn
-                    block
-                    color="success"
-                    @click="snack('bottom', 'right')"
-                  >
-                    Bottom Right
-                  </v-btn>
-                </v-flex>
-              </v-layout>
-            </v-container>
-
-            <v-snackbar
-              :color="color"
-              :bottom="bottom"
-              :top="top"
-              :left="left"
-              :right="right"
-              v-model="snackbar"
-              dark
-            >
-              <v-icon
-                color="white"
-                class="mr-3"
-              >
-                mdi-bell-plus
-              </v-icon>
-              <div>NOTIFICATION: <b>PLACEHOLDER</b> - TEXT TEXT TEXT TEXT TEXT.</div>
-              <v-icon
-                size="16"
-                @click="snackbar = false"
-              >
-                mdi-close-circle
-              </v-icon>
-            </v-snackbar>
-          </v-card-text>
-        </material-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+    <v-container fluid grid-list-xl fill-height>
+        <v-layout row justify-center align-center>
+            <v-dialog v-model="modalVisible">
+                <template v-slot:activator="{ on }">
+                    <v-btn color="primary" dark v-on="on" @click="showModal">Open Dialog</v-btn>
+                </template>
+                <v-card>
+                        <v-container grid-list-md text-xs-left>
+                            <v-layout id="task-modal-layout" row wrap justify-center>
+                                <v-flex xs12>
+                                    <div id="task-modal-dashboard">
+                                    </div>
+                                </v-flex>
+                                <v-flex wrap xs4>
+                                    <v-card>
+                                        <v-card-text v-html="processText"/>
+                                    </v-card>
+                                </v-flex>
+                                <v-flex wrap xs4>
+                                    <v-card>
+                                        <v-card-text v-html="taskText"/>
+                                    </v-card>
+                                </v-flex>
+                                <v-flex wrap xs4>
+                                    <v-card>
+                                        <v-card-text></v-card-text>
+                                    </v-card>
+                                </v-flex>
+                            </v-layout>
+                        </v-container>
+                </v-card>
+            </v-dialog>
+        </v-layout>
+    </v-container>
 </template>
 
 <script>
+import data from '../assets/processtest.json'
+
 export default {
-  data: () => ({
-    color: null,
-    colors: [
-      'purple',
-      'info',
-      'success',
-      'warning',
-      'error'
-    ],
-    top: true,
-    bottom: false,
-    left: false,
-    right: false,
-    snackbar: false
-  }),
+    data() {
+        return {
+            chartWidth: 0,
+            data: data,
+            modalVisible: false,
+            processText: "",
+            taskChartData: [],
+            taskText: "",
+            windowHeight: 0,
+            windowWidth: 0
+        }
+    },
+    mounted() {
+        this.$nextTick(function() {
+            window.addEventListener('resize', this.getWindowWidth);
+            window.addEventListener('resize', this.getWindowHeight);
 
-  methods: {
-    snack (...args) {
-      this.top = false
-      this.bottom = false
-      this.left = false
-      this.right = false
+            //Init
+            this.getWindowWidth();
+            this.getWindowHeight();
+        });
 
-      for (const loc of args) {
-        this[loc] = true
-      }
+        document.onreadystatechange = () => {
+            if (document.readyState == "complete") {
+            }
+        };
 
-      this.color = this.colors[Math.floor(Math.random() * this.colors.length)]
+        this.taskChartData.push([
+            {id: 'Process', label: 'Process', type: 'string'},
+            {id: 'Task', label: 'Task', type: 'string'},
+            {id: 'Start', label: 'Start', type: 'date'},
+            {id: 'End', label: 'End', type: 'date'}
+        ]);
 
-      this.snackbar = true
+        for (var process in this.data) {
+            for (var task in this.data[process].Tasks) {
+                this.taskChartData.push([
+                    this.data[process].Process,
+                    this.data[process].Tasks[task].TaskType,
+                    new Date(this.data[process].Tasks[task].BeginTime),
+                    new Date(this.data[process].Tasks[task].EndTime)]);
+            }
+        }
+    },
+    methods: {
+        drawTasks() {
+            var container = document.getElementById('task-modal-dashboard');
+            var chart = new google.visualization.Timeline(container);
+            var dataTable = new google.visualization.arrayToDataTable(this.taskChartData);
+            var options = {
+                height: 100,
+                timeline: {
+                    showRowLabels: true
+                },
+                width: this.chartWidth
+            };
+
+            this.processText = "";
+
+            for (var process in this.data) {
+                for (var key in this.data[process]) {
+                    if (key !== "Tasks") {
+                        this.processText +=
+                            (key === "ParentProcessLogID" ? "" : "<br>") +
+                            "<span class=\"body-1 font-weight-bold\">" + key + ":</span> " +
+                            "<span class=\"body-1\">" + (!this.data[process][key] ? "" : this.data[process][key]) + "</span>";
+                    }
+                }
+
+                for (var task in this.data[process].Tasks) {
+                }
+            }
+
+            google.visualization.events.addListener(chart, 'select', function() {
+                console.log(chart.getSelection());
+            });
+
+            chart.draw(dataTable, options);
+        },
+        getWindowHeight(event) {
+            this.windowHeight = document.documentElement.clientHeight;
+        },
+        getWindowWidth(event) {
+            this.windowWidth = document.documentElement.clientWidth;
+            this.setChartWidth();
+
+            if (this.modalVisible) {
+                this.drawTasks();
+            }
+        },
+        setChartWidth() {
+            this.chartWidth = parseInt(document.defaultView.getComputedStyle(document.getElementById('task-modal-layout')).width, 10);
+        },
+        showModal() {
+            this.modalVisible = true;
+
+            setTimeout(() => (this.drawTasks()), 100);
+        }
     }
-  }
 }
 </script>
