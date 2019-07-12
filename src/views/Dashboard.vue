@@ -96,7 +96,7 @@
 <script>
 import parentRegistryData from '../assets/ParentRegistry.json'
 import childRegistryData from '../assets/ChildRegistry.json'
-import parentProcessData from '../assets/ParentProcessLog.json'
+// import parentProcessData from '../assets/ParentProcessLog.json'
 import childProcessData from '../assets/ChildProcessLog.json'
 import taskLogData from '../assets/TaskLogs.json'
 
@@ -232,7 +232,8 @@ export default {
               'CDRServer02'
             ],
             drawTimeline: true,
-            selectedDate: '2019-06-01',
+            apiGET: {},
+            selectedDate: '2019-05-28',
             displayCalendar: false,
             isLoading: true,
             activeItemTypeFilters: [],
@@ -241,7 +242,7 @@ export default {
             chartData: [],
             parentRegistryData: parentRegistryData,
             childRegistryData: childRegistryData,
-            parentProcessData: parentProcessData,
+            parentProcessData: [],
             childProcessData: childProcessData,
             taskLogData: taskLogData,
             chartOptions: {
@@ -277,6 +278,37 @@ export default {
             //Init
             this.getWindowWidth();
             this.getWindowHeight();
+        });
+
+        this.taskChartData.push([
+            {id: 'Process', label: 'Process', type: 'string'},
+            {id: 'Task', label: 'Task', type: 'string'},
+            {id: 'Start', label: 'Start', type: 'date'},
+            {id: 'End', label: 'End', type: 'date'}
+        ]);
+
+        axios
+          .get('https://92r3xgypt5.execute-api.us-east-2.amazonaws.com/dev/tomia')
+          .then( resp => {
+            this.parentProcessData = resp.data
+            this.isLoading = true
+            this.refactorParentRegistry()
+            this.refactorChildRegistry()
+            this.refactorParentProcess()
+            this.refactorChildProcess()
+
+            for (var i in this.parentProcessData) {
+                for (var j in this.parentProcessData[i]) {
+                    //console.log(this.parentProcessData[i][j].Process)
+                    this.chartData.push([ this.parentProcessData[i][j].Process, String(this.parentProcessData[i][j].ProcessID), new Date(this.parentProcessData[i][j].ProcessBeginTime), new Date(this.parentProcessData[i][j].ProcessEndTime), String(this.parentProcessData[i][j].ProcessID) ])
+                }
+            }
+            //console.log(this.chartData)
+            this.isLoading = false
+          }
+
+          ).catch((err) => {
+          console.log('error')
         });
     },
     watch: {
