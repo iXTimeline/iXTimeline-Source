@@ -99,6 +99,7 @@ import childRegistryData from '../assets/ChildRegistry.json'
 // import parentProcessData from '../assets/ParentProcessLog.json'
 import childProcessData from '../assets/ChildProcessLog.json'
 import taskLogData from '../assets/TaskLogs.json'
+import axios from 'axios';
 
 export default {
     data () {
@@ -291,16 +292,42 @@ export default {
           .get('https://92r3xgypt5.execute-api.us-east-2.amazonaws.com/dev/tomia')
           .then( resp => {
             this.parentProcessData = resp.data
+            console.log(resp.data);
             this.isLoading = true
-            this.refactorParentRegistry()
-            this.refactorChildRegistry()
-            this.refactorParentProcess()
-            this.refactorChildProcess()
+            this.refactor();
 
-            for (var i in this.parentProcessData) {
-                for (var j in this.parentProcessData[i]) {
-                    //console.log(this.parentProcessData[i][j].Process)
-                    this.chartData.push([ this.parentProcessData[i][j].Process, String(this.parentProcessData[i][j].ProcessID), new Date(this.parentProcessData[i][j].ProcessBeginTime), new Date(this.parentProcessData[i][j].ProcessEndTime), String(this.parentProcessData[i][j].ProcessID) ])
+            this.chartData.push([
+              {id: 'Process', label: 'Process', type: 'string'},
+              {id: 'Task', label: 'Task', type: 'string'},
+              {id: 'Start', label: 'Start', type: 'date'},
+              {id: 'End', label: 'End', type: 'date'},
+              {id: 'Tooltip', role: 'tooltip', type: 'string'}
+            ]);
+
+            for (var parentRegistry in this.parentRegistryData) {
+                var registry = this.parentRegistryData[parentRegistry].Registry;
+
+                for (var i in this.parentRegistryData[parentRegistry].ChildRegistryIDs) {
+                    var childRegistryID = this.parentRegistryData[parentRegistry].ChildRegistryIDs[i];
+                    var label = registry + "|" + this.childRegistryData[childRegistryID].Registry;
+
+                    for (var j in this.childRegistryData[childRegistryID].ProcessLogIDs) {
+                        var processLogID = this.childRegistryData[childRegistryID].ProcessLogIDs[j];
+                        var process = this.childProcessData[processLogID].Process;
+                        var start = new Date(this.childProcessData[processLogID].ProcessBeginTime);
+                        var end = new Date(this.childProcessData[processLogID].ProcessEndTime);
+
+                        this.chartData.push([label, process, start, end, processLogID]);
+                    }
+                }
+
+                for (var k in this.parentRegistryData[parentRegistry].ProcessLogIDs) {
+                    var processLogID = this.parentRegistryData[parentRegistry].ProcessLogIDs[k];
+                    var process = this.parentProcessData[processLogID].Process;
+                    var start = new Date(this.parentProcessData[processLogID].ProcessBeginTime);
+                    var end = new Date(this.parentProcessData[processLogID].ProcessEndTime);
+
+                    this.chartData.push([registry, process, start, end, processLogID]);
                 }
             }
             //console.log(this.chartData)
@@ -317,7 +344,7 @@ export default {
         }
     },
     methods: {
-        drawDashboard() {
+        drawDashboard() {console.log("draw");
             var chart = new google.visualization.Timeline(document.getElementById('chart'));
             var data = new google.visualization.arrayToDataTable(this.chartData);
             var vm = this;
@@ -336,12 +363,15 @@ export default {
                 }
             });
           //dashboard.bind(control, chart);
-
+            console.log(this.chartData);
               if (this.chartData.length > 1) {
                 chart.draw(data, options);
               }
+              else {
+                  alert("0 records found.");
+              }
         },
-        refactor() {
+        refactor() {console.log("ref");
             var parentRegistryJson = {};
             var childRegistryJson = {};
             var parentProcessJson = {};
@@ -436,7 +466,7 @@ export default {
             this.childRegistryData = childRegistryJson;
             this.parentProcessData = parentProcessJson;
             this.childProcessData = childProcessJson;
-            this.taskLogData = taskLogJson;
+            this.taskLogData = taskLogJson;console.log("ref ed");
         },
         // refactorParentProcess() {
         //     // console.log('in refactor parent process')
@@ -766,44 +796,6 @@ export default {
         }
     },
     created: function() {
-        this.isLoading = true
-        this.refactor();
-
-        this.chartData.push([
-          {id: 'Process', label: 'Process', type: 'string'},
-          {id: 'Task', label: 'Task', type: 'string'},
-          {id: 'Start', label: 'Start', type: 'date'},
-          {id: 'End', label: 'End', type: 'date'},
-          {id: 'Tooltip', role: 'tooltip', type: 'string'}
-        ]);
-
-        for (var parentRegistry in this.parentRegistryData) {
-            var registry = this.parentRegistryData[parentRegistry].Registry;
-
-            for (var i in this.parentRegistryData[parentRegistry].ChildRegistryIDs) {
-                var childRegistryID = this.parentRegistryData[parentRegistry].ChildRegistryIDs[i];
-                var label = registry + "|" + this.childRegistryData[childRegistryID].Registry;
-
-                for (var j in this.childRegistryData[childRegistryID].ProcessLogIDs) {
-                    var processLogID = this.childRegistryData[childRegistryID].ProcessLogIDs[j];
-                    var process = this.childProcessData[processLogID].Process;
-                    var start = new Date(this.childProcessData[processLogID].ProcessBeginTime);
-                    var end = new Date(this.childProcessData[processLogID].ProcessEndTime);
-
-                    this.chartData.push([label, process, start, end, processLogID]);
-                }
-            }
-
-            for (var k in this.parentRegistryData[parentRegistry].ProcessLogIDs) {
-                var processLogID = this.parentRegistryData[parentRegistry].ProcessLogIDs[k];
-                var process = this.parentProcessData[processLogID].Process;
-                var start = new Date(this.parentProcessData[processLogID].ProcessBeginTime);
-                var end = new Date(this.parentProcessData[processLogID].ProcessEndTime);
-
-                this.chartData.push([registry, process, start, end, processLogID]);
-            }
-        }
-        this.isLoading = false;
     }
 }
 </script>
